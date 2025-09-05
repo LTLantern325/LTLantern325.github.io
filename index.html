@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>LTweb</title>
+  <style>
+    body { font-family: sans-serif; max-width: 350px; margin: 40px auto; }
+    label { display: block; margin-top: 18px; }
+    select, input { width: 100%; padding: 7px; margin-top: 4px; }
+    button { margin-top: 18px; width: 100%; padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 4px; cursor: pointer;}
+    button:active { background: #135097; }
+  </style>
+</head>
+<body>
+  <h2>LTweb v1.3
+    Only for education purposes only!
+  </h2>
+
+  <label for="edit-type">보정</label>
+  <select id="edit-type">
+    <option value="before">보정 전</option>
+    <option value="after">보정 후</option>
+  </select>
+
+  <label for="photo-type">사진 종류</label>
+  <select id="photo-type">
+    <option value="inpro">실내 프로필</option>
+    <option value="outpro">야외 프로필</option>
+    <option value="iphoto">증명사진</option>
+  </select>
+
+  <label for="classnum">반번호 (예: 0101)</label>
+  <input type="text" id="classnum" maxlength="4" placeholder="예: 0101">
+
+  <button onclick="downloadImage()">다운로드</button>
+
+  <script>
+    function downloadImage() {
+      const edit = document.getElementById('edit-type').value;
+      const type = document.getElementById('photo-type').value;
+      const classnum = document.getElementById('classnum').value.trim();
+
+      if(!classnum.match(/^\d{4}$/)) {
+        alert('반번호를 4자리 숫자로 입력하세요.');
+        return;
+      }
+      const extMap = {
+        inpro: 'A3',
+        outpro: 'A2',
+        iphoto: 'A6'
+      };
+      const ext = extMap[type];
+
+      const imgUrl = `http://www.selectzone.co.kr/school_data/sch149/${edit}/${type}/${classnum}_${ext}.jpg`;
+
+      fetch(imgUrl)
+        .then(resp => {
+          if (!resp.ok) throw new Error('이미지 없음');
+          return resp.blob();
+        })
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${classnum}_${ext}.jpg`;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          }, 300);
+        })
+        .catch(err => {
+          alert('다운로드 실패: ' + err.message);
+        });
+    }
+  </script>
+</body>
+</html>
