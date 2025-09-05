@@ -1,2 +1,2 @@
-# LTLantern325.github.io
+# Website for something
 idk
