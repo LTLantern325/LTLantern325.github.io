@@ -18,15 +18,18 @@ app.get("/download", async (req, res) => {
       return res.status(400).send("❌ Missing query params");
     }
 
-    // selectzone 실제 이미지 URL
     const fileUrl = `http://www.selectzone.co.kr/school_data/sch149/${edit}/${type}/${classnum}_${ext}.jpg`;
 
-    const response = await fetch(fileUrl);
+    const response = await fetch(fileUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+      }
+    });
+
     if (!response.ok) {
       return res.status(404).send("❌ File not found on origin server");
     }
 
-    // 자동 다운로드 헤더
     res.setHeader("Content-Disposition", `attachment; filename="${classnum}_${ext}.jpg"`);
     res.setHeader("Content-Type", "image/jpeg");
 
