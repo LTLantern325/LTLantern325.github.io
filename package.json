@@ -1,7 +1,7 @@
 {
-  "name": "ltweb",
+  "name": "ltweb-proxy",
   "version": "1.0.0",
-  "description": "selectzone 이미지 자동 다운로드 프록시 서버",
+  "description": "Selectzone 이미지 자동 다운로드 프록시 서버 (Render 최적화)",
   "main": "server.js",
   "type": "module",
   "scripts": {
