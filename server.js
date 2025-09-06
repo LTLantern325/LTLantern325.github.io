@@ -7,9 +7,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// public 폴더 정적 제공
 app.use(express.static(path.join(__dirname, "public")));
 
-// 자동 다운로드
+// 자동 다운로드 라우트
 app.get("/download", async (req, res) => {
   try {
     const { edit, type, classnum, ext } = req.query;
@@ -18,7 +19,8 @@ app.get("/download", async (req, res) => {
       return res.status(400).send("❌ Missing query params");
     }
 
-    const fileUrl = `http://www.selectzone.co.kr/school_data/sch149/${edit}/${type}/${classnum}_${ext}.jpg`;
+    // HTTPS + User-Agent
+    const fileUrl = `https://www.selectzone.co.kr/school_data/sch149/${edit}/${type}/${classnum}_${ext}.jpg`;
 
     const response = await fetch(fileUrl, {
       headers: {
@@ -40,6 +42,7 @@ app.get("/download", async (req, res) => {
   }
 });
 
+// Render 환경 포트
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
